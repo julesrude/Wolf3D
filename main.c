@@ -6,7 +6,7 @@
 /*   By: yruda <yruda@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/06 17:22:53 by yruda             #+#    #+#             */
-/*   Updated: 2019/08/08 19:54:59 by yruda            ###   ########.fr       */
+/*   Updated: 2019/08/10 20:06:14 by yruda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,19 +57,20 @@ int		main(int argc, char **argv)
 
 	map = NULL;
 	w = NULL;
-	init_wolf(&w);
+	w = (t_wolf *)malloc(sizeof(t_wolf));
+	init_wolf(w);
 	if (argc == 1)
 		put_error(ERR_NOMAP, NULL, 1);
 	if (read_file(argv[1], &map, w) == -1)
 		return (EXIT_FAILURE);
 	map_tostruct(map, w);
-	cast_rays(w);
 	init_mlx(w);
+	cast_rays(w);
 	mlx_hook(w->win, 2, 0, key_press, w);
-	// mlx_hook(m->win, 4, 0, mouse_press, w);
+//	mlx_hook(m->win, 4, 0, mouse_press, w);
 	// mlx_hook(m->win, 5, 0, mouse_release, w);
 	// mlx_hook(m->win, 6, 0, mouse_move, w);
 	mlx_hook(w->win, 17, 0, ft_close, w);
-	mlx_loop(w->win);
+	mlx_loop(w->mlx);
 	return (0);
 }

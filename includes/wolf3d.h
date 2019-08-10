@@ -6,7 +6,7 @@
 /*   By: yruda <yruda@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/06 17:26:37 by yruda             #+#    #+#             */
-/*   Updated: 2019/08/08 19:54:37 by yruda            ###   ########.fr       */
+/*   Updated: 2019/08/10 22:21:12 by yruda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,14 @@
 
 # define WIN_W 1280
 # define WIN_H 720
+# define IMAGE_W 1280
+# define IMAGE_H 720
 # define CENTRE_W 640
 # define CENTRE_H 360
 
-# define BLKSIZE 128
+# define BLKSIZE (128)
 # define STEP 8
+# define ANGLE (M_PI / 180)
 
 # define ISWALL(c) ((c >= '1' && c <= '9') ? (1) : (0))
 
@@ -63,8 +66,10 @@ typedef struct	s_settings
 	double	fov;
 	double	neighrays;
 	int		distance;
+	int		blksize;
 
 	int		player_height;
+	int		horison;
 	int		fish_eye;
 //	int		my_size;
 }				t_settings;
@@ -115,7 +120,7 @@ int		read_file(char *file, char **map, t_wolf *w);
 /*
 **	init_wolf.c
 */
-int		init_wolf(t_wolf **w);
+int		init_wolf(t_wolf *w);
 
 /*
 **	init_mlx.c
@@ -136,5 +141,18 @@ int		cast_rays(t_wolf *w);
 **	actions.c
 */
 int		key_press(int key, t_wolf *w);
+
+/*
+**	draw_ray.c
+*/
+void	draw_ray(t_wolf *w, int wall_height, int raynum);
+
+void	image_background(t_wolf *w, int color);
+
+/*
+**	distance_to_walls.c
+*/
+int		find_distance(t_wolf *w, t_point p, double angle);
+int		projected_height(t_wolf *w, t_point p, double angle);
 
 #endif

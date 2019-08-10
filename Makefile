@@ -6,6 +6,8 @@ SRCS =			main.c\
 				init_mlx.c\
 				map_tostruct.c\
 				cast_rays.c\
+				draw_ray.c\
+				distance_to_walls.c\
 				actions.c
 
 OBJS_PATH =		objs/
