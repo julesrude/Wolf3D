@@ -6,7 +6,7 @@
 /*   By: yruda <yruda@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/08 19:47:17 by yruda             #+#    #+#             */
-/*   Updated: 2019/08/10 21:32:55 by yruda            ###   ########.fr       */
+/*   Updated: 2019/08/12 15:48:02 by yruda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,11 @@
 # define KEY_T 17
 # define KEY_Q 12
 # define KEY_W 13
-# define KEY_S 1
 # define KEY_E 14
+# define KEY_A 0
+# define KEY_S 1
+# define KEY_D 2
+
 # define KEY_R 15
 # define KEY_J 38
 # define KEY_P 35

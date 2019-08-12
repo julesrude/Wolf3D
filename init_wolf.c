@@ -6,7 +6,7 @@
 /*   By: yruda <yruda@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/08 13:46:50 by yruda             #+#    #+#             */
-/*   Updated: 2019/08/10 22:22:58 by yruda            ###   ########.fr       */
+/*   Updated: 2019/08/12 17:56:26 by yruda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	init_settings(t_settings *set)
 	set->fish_eye = 0;
 	set->blksize = 128;
 	set->neighrays = set->fov / WIN_W;
+	set->speed = 5;
 }
 
 int		init_wolf(t_wolf *w)
@@ -28,7 +29,7 @@ int		init_wolf(t_wolf *w)
 	w->map = NULL;
 	w->xwidth = 0;
 	w->ylength = 1;
-	w->angle = 90.0 * ANGLE;
+	w->angle = 270.0 * ANGLE;
 	w->mlx = NULL;
 	w->win = NULL;
 	init_settings(&(w->set));

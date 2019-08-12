@@ -12,14 +12,48 @@
 
 #include "wolf3d.h"
 
+void	walking(int key, t_wolf *w)
+{
+	int		delta_x;
+	int		delta_y;
+
+	delta_x = 0;
+	delta_y = 0;
+	if (key == KEY_W || key == KEY_UP)
+	{
+		delta_x = w->set.speed * cos(w->angle);
+		delta_y = w->set.speed * sin(w->angle);
+	}
+	if (key == KEY_LEFT || key == KEY_A)
+	{
+		delta_y = - w->set.speed * cos(w->angle);
+		delta_x = w->set.speed * sin(w->angle);
+	}
+	if	(key == KEY_RIGHT || key == KEY_D)
+	{
+		delta_x = - w->set.speed * sin(w->angle);
+		delta_y = w->set.speed * cos(w->angle);
+	}
+	if (key == KEY_S || key == KEY_DOWN)
+	{
+		delta_y = - w->set.speed * sin(w->angle);
+		delta_x = - w->set.speed * cos(w->angle);
+	}
+	w->xplayer += delta_x;
+	w->yplayer += delta_y;
+}
+
 int		key_press(int key, t_wolf *w)
 {
 	if (key == KEY_ESC)
 		ft_close(w);
-	if (key == KEY_W)
-		w->yplayer -= 5;
-	if (key == KEY_S)
-		w->yplayer += 5;
+	if (key == KEY_LEFT || key == KEY_RIGHT || key == KEY_UP || key == KEY_DOWN ||
+		key == KEY_W || key == KEY_S || key == KEY_D || key == KEY_A)
+		walking(key, w);
+	if (key == KEY_E)
+		w->angle += 0.017;
+	if (key == KEY_Q)
+		w->angle -= 0.017;
 	cast_rays(w);
 	return (0);
 }

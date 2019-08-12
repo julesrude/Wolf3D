@@ -6,7 +6,7 @@
 /*   By: yruda <yruda@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/06 17:26:37 by yruda             #+#    #+#             */
-/*   Updated: 2019/08/10 22:21:12 by yruda            ###   ########.fr       */
+/*   Updated: 2019/08/12 21:35:01 by yruda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,41 @@
 # define ERR_NOMAP		1
 # define ERR_MESSAGE	2
 
+enum	wall_sides
+{
+	north,
+	south,
+	east,
+	west
+}					;
+
+typedef struct	s_dpoint
+{
+	double	x;
+	double	y;
+}				t_dpoint;
+
 typedef struct	s_point
 {
 	int		x;
 	int		y;
 }				t_point;
 
+typedef struct	s_wall
+{
+	int			height;
+	float		distance;
+	int			type;
+	enum wall_sides	side;
+}				t_wall;
+
 typedef struct	s_settings
 {
 	double	fov;
 	double	neighrays;
-	int		distance;
+	int		distance;//to the viewing plane
 	int		blksize;
+	int		speed;//of walking
 
 	int		player_height;
 	int		horison;
@@ -146,13 +169,12 @@ int		key_press(int key, t_wolf *w);
 **	draw_ray.c
 */
 void	draw_ray(t_wolf *w, int wall_height, int raynum);
-
 void	image_background(t_wolf *w, int color);
 
 /*
 **	distance_to_walls.c
 */
-int		find_distance(t_wolf *w, t_point p, double angle);
-int		projected_height(t_wolf *w, t_point p, double angle);
+double	find_distance(t_wolf *w, t_dpoint p, double angle);
+int		projected_height(t_wolf *w, t_dpoint p, double angle);
 
 #endif
