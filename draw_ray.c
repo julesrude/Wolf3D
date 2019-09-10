@@ -6,48 +6,71 @@
 /*   By: yruda <yruda@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/09 22:14:31 by yruda             #+#    #+#             */
-/*   Updated: 2019/08/12 21:31:03 by yruda            ###   ########.fr       */
+/*   Updated: 2019/09/10 16:06:53 by yruda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf3d.h"
 
-void	dot_to_img(t_wolf *w, int x, int y, int color)
+void	draw_ceiling_floor(t_wolf *w, t_wall wall, int raynum, int pixel_number,
+	int sizeline)
 {
-	if (x >= 0 && x < IMAGE_W && y >= 0 && y < IMAGE_H)
-		ft_memcpy(&(w->img->addr[(y * IMAGE_W + x) * 4]), &color, 4);
-}
+	int		color;
 
-void	image_background(t_wolf *w, int color)
-{
-	int		i;
-	int		j;
-
-	i = 0;
-	j = IMAGE_H * IMAGE_W * 4;
-	while (i < j)
+	color = CCEILING;
+	pixel_number -= sizeline;
+	while (wall.min - 1 >= 0)
 	{
-		ft_memcpy(&(w->img->addr[i]), &color, 4);
-		i += 4;
+		ft_memcpy(&(w->img->addr[pixel_number]), &color, 4);
+		pixel_number -= sizeline;
+		wall.min--;
+	}
+	
+	color = CFLOOR;
+	pixel_number = (wall.max + 1) * sizeline + raynum * 4;
+	while (wall.max + 1 < WIN_H)
+	{
+		ft_memcpy(&(w->img->addr[pixel_number]), &color, 4);
+		pixel_number += sizeline;
+		wall.max++;
 	}
 }
 
-void	draw_wall_ray(t_wolf *w, int wall_height, int raynum)
+void	draw_wall_ray(t_wolf *w, t_wall wall, /*int raynum, */int pixel_number)
 {
-	int		min;
-	int		i;
+	int		color;
 
-	min = w->set.horison - wall_height / 2;
-	i = 0;
-	while(i < wall_height)
+	color = (w->set->shadows) ?
+		get_shadedcolor(wall, w->colors[wall.side]) : w->colors[wall.side];
+	if (!(w->set->textures_on))// цю умову перемістити, щоб він не щоразу перевіряв, а один раз
+		while (wall.min <= wall.max)
+			{
+				ft_memcpy(&(w->img->addr[pixel_number]), &color, 4);
+				pixel_number += w->img->size_line;
+				wall.min++;
+			}
+
+}
+
+void	draw_ray(t_wolf *w, t_wall wall, int raynum)
+{
+	int		pixel_number;
+	int		sizeline;
+
+	sizeline = w->img->size_line;
+	wall.min = ft_max(w->set->horison - wall.height / 2, 0);
+	wall.max = ft_min(wall.min + wall.height, WIN_H);
+	pixel_number = wall.min * w->img->size_line + raynum * 4;
+	if (!(w->set->textures_on))
 	{
-		dot_to_img(w, raynum, min, CWALL_S);
-		min++;
-		i++;
+		draw_wall_ray(w, wall, pixel_number);
+		draw_ceiling_floor(w, wall, raynum, pixel_number, sizeline);
+	}
+	else
+	{
+		draw_wall_texture_ray(w, wall, raynum);	
+		draw_ceiling_floor(w, wall, raynum, pixel_number, sizeline);
 	}
 }
+	
 
-void	draw_ray(t_wolf *w, int wall_height, int raynum)
-{
-	draw_wall_ray(w, wall_height, raynum);
-}

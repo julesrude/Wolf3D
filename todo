@@ -1,0 +1,12 @@
+Ask someone to crash map;
+
+All squares are busy
+
+If player is on the edge, parse him to the nearest empty square.
+
+111111
+111111
+x22222
+333333
+
+4x4 - seg fault

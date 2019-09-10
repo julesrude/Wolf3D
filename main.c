@@ -6,7 +6,7 @@
 /*   By: yruda <yruda@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/06 17:22:53 by yruda             #+#    #+#             */
-/*   Updated: 2019/08/10 20:06:14 by yruda            ###   ########.fr       */
+/*   Updated: 2019/09/09 15:03:22 by yruda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,18 @@ int		put_error(int err_option, char *param, int toexit)
 	return (-1);
 }
 
+void	the_loop(t_wolf *w)
+{
+	mlx_hook(w->win, 2, 0, key_press, w);
+	mlx_hook(w->win, 3, 0, key_release, w);
+//	mlx_hook(m->win, 4, 0, mouse_press, w);
+//	mlx_hook(w->win, 6, 0, mouse_move, w);
+	mlx_hook(w->win, 17, 0, ft_close, w);
+	mlx_loop_hook(w->mlx, expose_hook, w);
+	mlx_loop(w->mlx);
+	exit(0);
+}
+
 int		main(int argc, char **argv)
 {
 	char	*map;
@@ -65,12 +77,8 @@ int		main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	map_tostruct(map, w);
 	init_mlx(w);
+	init_colors_textures(w);
 	cast_rays(w);
-	mlx_hook(w->win, 2, 0, key_press, w);
-//	mlx_hook(m->win, 4, 0, mouse_press, w);
-	// mlx_hook(m->win, 5, 0, mouse_release, w);
-	// mlx_hook(m->win, 6, 0, mouse_move, w);
-	mlx_hook(w->win, 17, 0, ft_close, w);
-	mlx_loop(w->mlx);
+	the_loop(w);
 	return (0);
 }

@@ -189,7 +189,6 @@ void	*mlx_int_parse_xpm(mlx_ptr_t *xvar,void *info,int info_size,char *(*f)())
 
       if (!tab[j])
 	RETURN;
-
       rgb_col = mlx_int_get_text_rgb(tab[j], tab[j+1]);
       /*      
       if ((rgb_col = mlx_int_get_text_rgb(tab[j], tab[j+1]))==-1)

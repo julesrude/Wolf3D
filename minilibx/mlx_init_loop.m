@@ -55,6 +55,7 @@ void *mlx_init()
   new_mlx->main_loop_active = 0;
 
   new_mlx->appid = [NSApplication sharedApplication];
+  [NSCursor hide];///////////////////////////////
 
   // super magic trick to detach app from terminal, get menubar & key input events
   for (NSRunningApplication * app in [NSRunningApplication runningApplicationsWithBundleIdentifier:@"com.apple.finder"])
@@ -85,6 +86,7 @@ void *mlx_init()
   new_mlx->font->vertexes[5] = -FONT_HEIGHT-1;
   new_mlx->font->vertexes[7] = -FONT_HEIGHT-1;
 
+[NSCursor unhide];
   return ((void *)new_mlx);
 }
 

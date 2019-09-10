@@ -8,7 +8,11 @@ SRCS =			main.c\
 				cast_rays.c\
 				draw_ray.c\
 				distance_to_walls.c\
-				actions.c
+				actions.c\
+				color_scheme.c\
+				assist.c\
+				image.c\
+				textures.c
 
 OBJS_PATH =		objs/
 OBJS =			${addprefix $(OBJS_PATH), ${SRCS:%.c=%.o}}
@@ -24,7 +28,7 @@ LIBX =			minilibx/libmlx.a
 LIBX_FOLDER =	minilibx/
 LIBX_FLAGS =	-L minilibx/ -lmlx -framework OpenGL -framework AppKit
 
-COMPILE =		gcc -Wall -Wextra -Werror
+COMPILE =		gcc -Wall -Wextra -Werror -g
 DELETE_PREV =	"\x1b[A\x1b[K"
 
 all: $(NAME)

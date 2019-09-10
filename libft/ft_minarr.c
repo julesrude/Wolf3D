@@ -6,7 +6,7 @@
 /*   By: yruda <yruda@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 19:11:14 by yruda             #+#    #+#             */
-/*   Updated: 2019/01/26 19:18:15 by yruda            ###   ########.fr       */
+/*   Updated: 2019/09/06 19:49:36 by yruda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,18 @@ int		ft_minarr(int *a, int n)
 		i++;
 	}
 	return (min);
+}
+
+int		ft_min(int a, int b)
+{
+	if (a < b)
+		return (a);
+	return (b);
+}
+
+int		ft_max(int a, int b)
+{
+	if (a < b)
+		return (b);
+	return (a);
 }

@@ -6,44 +6,17 @@
 /*   By: yruda <yruda@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/08 18:38:40 by yruda             #+#    #+#             */
-/*   Updated: 2019/08/12 21:30:36 by yruda            ###   ########.fr       */
+/*   Updated: 2019/09/10 12:53:46 by yruda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf3d.h"
 
-t_point	coords_to_block(t_dpoint c, t_wolf *w)
-{
-	t_point	blk;
-
-	blk.x = c.x / BLKSIZE;
-	if (blk.x >= w->xwidth)
-		blk.x = w->xwidth - 1;
-	else if (blk.x < 0)
-		blk.x = 0;
-	blk.y = c.y / BLKSIZE;
-	if (blk.y >= w->ylength)
-		blk.y = w->ylength - 1;
-	else if (blk.y < 0)
-		blk.y = 0;
-	return (blk);
-}
-
-int		point_iswall(t_dpoint c, t_wolf *w)
-{
-	t_point	b;
-
-	b = coords_to_block(c, w);
-	if (ISWALL(w->map[b.y][b.x]))
-		return (1);
-	return (0);
-}
-
 /*
 **	finding vertical intersections - working on 2D top-view plane:
 */
 
-t_dpoint	cast_vertical(t_wolf *w, float angle)
+t_dpoint	cast_vertical(t_wolf *w, float angle, float angle_tan)
 {
 	int			right;
 	t_dpoint	c;
@@ -53,23 +26,48 @@ t_dpoint	cast_vertical(t_wolf *w, float angle)
 
 	right = (cos(angle) > 0) ? 1 : 0;
 	delta_x = (right) ? BLKSIZE : (- BLKSIZE);
-	delta_y = delta_x * tan(angle);
-	c.x = (right) ? (w->xplayer / BLKSIZE) * BLKSIZE + BLKSIZE :
-		(w->xplayer / BLKSIZE) * BLKSIZE - 1;
+	delta_y = delta_x * angle_tan;
+	c.x = (right) ? ((int)w->xplayer / BLKSIZE) * BLKSIZE + BLKSIZE :
+		((int)w->xplayer / BLKSIZE) * BLKSIZE - 1.0;
 	if (right)
-		c.y = w->yplayer + ((double)(c.x - w->xplayer + 1) * tan(angle));//abs
+		c.y = w->yplayer + ((c.x - w->xplayer) * angle_tan);
 	else
-		c.y = w->yplayer + ((double)(c.x - w->xplayer - 1) * tan(angle));//abs
-	if (point_iswall(c, w))
-		return (c);
-	while (!point_iswall(c, w))
+		c.y = w->yplayer + ((c.x + 1.0 - w->xplayer) * angle_tan);
+	while (!point_iswall(c.x, c.y, w))
 	{
-		d.y = c.y + delta_y;//
-		d.x = c.x + delta_x;
-		c.y = d.y;
-		c.x = d.x;
+		d = (t_dpoint){.x = c.x + delta_x, .y = c.y + delta_y };
+		c = (t_dpoint){ d.x, d.y };
 	}
+	if (!right)
+		c.x++;
 	return (c);
+}
+
+t_dpoint	cast_horisontal(t_wolf *w, float angle, float angle_tan)
+{
+	t_dpoint	a;
+	t_dpoint	b;
+	int			up;
+	double		delta_x;//
+	double		delta_y;//
+
+	up = (sin(angle) < 0) ? 1 : 0;
+	delta_y = (up) ? (- BLKSIZE) : BLKSIZE;
+	delta_x = delta_y / angle_tan;
+	a.y = (up) ? ((int)w->yplayer / BLKSIZE) * BLKSIZE - 1.0 :
+		((int)w->yplayer / BLKSIZE) * BLKSIZE + BLKSIZE;
+	if (up)
+		a.x = w->xplayer + (a.y + 1.0 - w->yplayer) / angle_tan;
+	else
+		a.x = w->xplayer + (a.y - w->yplayer) / angle_tan;
+	while (!point_iswall(a.x, a.y, w))
+	{
+		b = (t_dpoint){.x = a.x + delta_x, .y = a.y + delta_y};
+		a = (t_dpoint){ .x = b.x, .y = b.y };
+	}
+	if (up)
+		a.y++;
+	return (a);
 }
 
 /*
@@ -77,55 +75,50 @@ t_dpoint	cast_vertical(t_wolf *w, float angle)
 **	finding horisontal intersections, references to function finding vertical
 **	RETURNS the point of fidst intersiction on top-view 2D plane 
 */
-t_dpoint	cast_oneray(t_wolf *w, float angle)
+t_dpoint	cast_oneray(t_wolf *w, t_wall *wall, float angle, float angle_tan)
 {
-	int		up;
-	double		delta_x;//
-	double		delta_y;//
-	t_dpoint	a;
-	t_dpoint	b;
 	t_dpoint	vertical;
+	t_dpoint	horisontal;
+	double		dist_ver;
+	double		dist_hor;
 
-	up = (sin(angle) < 0) ? 1 : 0;
-	delta_y = (up) ? (- BLKSIZE) : BLKSIZE;
-	delta_x = delta_y / tan(angle);
-	a.y = (up) ? (w->yplayer / BLKSIZE) * BLKSIZE - 1 :
-		(w->yplayer / BLKSIZE) * BLKSIZE + BLKSIZE;
-	a.x = w->xplayer + (a.y - w->yplayer) / tan(angle);
-	vertical = cast_vertical(w, angle);
-	if (point_iswall(a, w))
-		return (fabs(vertical.x - w->xplayer) >= fabs(a.x - w->xplayer)) &&
-			fabs(vertical.y - w->yplayer) >= fabs(a.y - w->yplayer) ?/*тут можливо ще треба одну точку перевіряти, а може не треба*/
-			(a) : (vertical);
-	while (!point_iswall(a, w))
+	vertical = cast_vertical(w, angle, angle_tan);
+	horisontal = cast_horisontal(w, angle, angle_tan);
+	dist_ver = find_distance(w, vertical);
+	dist_hor = find_distance(w, horisontal); 
+	if (dist_hor < dist_ver)
 	{
-		b.y = a.y + delta_y;
-		b.x = a.x + delta_x;
-		a.y = b.y;
-		a.x = b.x;
+		wall->distance = dist_hor;
+		wall->side = (sin(angle) <= 0) ? north : south;
+		return (horisontal);
 	}
-	return ((fabs(vertical.x - w->xplayer) >= fabs(a.x - w->xplayer))) &&
-		fabs(vertical.y - w->yplayer) >= fabs(a.y - w->yplayer) ?
-		(a) : (vertical);
+	else
+	{
+		wall->distance = dist_ver;
+		wall->side = (cos(angle) <= 0) ? west : east;
+		return (vertical);
+	}
+	return (vertical);
 }
 
 int		cast_rays(t_wolf *w)
 {
 	double		angle;
+	t_wall		wall;
 	t_dpoint	p;
 	int			i;
-	int			wall_height;
 
 	i = 0;
-	wall_height = 0;
-	angle = w->angle - w->set.fov / 2;
-	image_background(w, CFLOOR);
+	wall.height = 0;
+	angle = w->angle - w->set->fov / 2;
 	while (i < WIN_W)
 	{
-		p = cast_oneray(w, angle);
-		wall_height = projected_height(w, p, angle);
-		draw_ray(w, wall_height, i);
-		angle += w->set.neighrays;
+		p = cast_oneray(w, &wall, angle, tan(angle));
+		wall.distance = find_corrected_distance(w, angle, wall.distance);
+		wall.height = ((double)BLKSIZE / wall.distance) * (double)w->set->distance;//projected_height(w, wall.distance);
+		wall.point = (t_point){ p.x, p.y };
+		draw_ray(w, wall, i);
+		angle += w->set->neighrays;
 		i++;
 	}
 	mlx_put_image_to_window(w->mlx, w->win, w->img->ptr, 0, 0);

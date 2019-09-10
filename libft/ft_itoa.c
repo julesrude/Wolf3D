@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yruda <yruda@student.unit.ua>              +#+  +:+       +#+        */
+/*   By: yruda <yruda@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/15 15:48:58 by yruda             #+#    #+#             */
-/*   Updated: 2018/11/22 20:40:41 by yruda            ###   ########.fr       */
+/*   Updated: 2019/09/06 17:25:49 by yruda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,34 +29,34 @@ static char	*ft_putitoa(int n, int symbols, int index, char *result)
 	return (result);
 }
 
-static char	*ft_itoa_special(int n, char *result)
+void	ft_itoa_special(int n, char *result)
 {
 	if (n == -2147483648)
 	{
-		if ((result = (char *)malloc(sizeof(char) * (11 + 1))))
-			ft_strcpy(result, "-2147483648\0");
-		return (result);
+		ft_strcpy(result, "-2147483648\0");
+		return ;
 	}
 	if (n == 0)
 	{
-		if ((result = (char *)malloc(sizeof(char) * (1 + 1))))
-			ft_strcpy(result, "0\0");
-		return (result);
+		ft_strcpy(result, "0\0");
+		return ;
 	}
-	return (result);
+	return ;
 }
 
-char		*ft_itoa(int n)
+void		ft_itoa(int n, char *result)
 {
 	long	temp;
 	int		i;
-	char	*result;
 
 	temp = n;
 	i = 0;
-	result = NULL;
+	ft_bzero(result, 12);
 	if (n == -2147483648 || n == 0)
-		return (ft_itoa_special(n, result));
+	{
+		ft_itoa_special(n, result);
+		return ;
+	}
 	if (n < 0)
 		i++;
 	while (temp != 0)
@@ -64,7 +64,5 @@ char		*ft_itoa(int n)
 		temp = temp / 10;
 		i++;
 	}
-	if ((result = (char *)malloc(sizeof(char) * (i + 1))))
-		ft_putitoa(n, i, i - 1, result);
-	return (result);
+	ft_putitoa(n, i, i - 1, result);
 }

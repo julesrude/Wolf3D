@@ -6,7 +6,7 @@
 /*   By: yruda <yruda@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/06 19:14:30 by yruda             #+#    #+#             */
-/*   Updated: 2019/08/08 14:40:16 by yruda            ###   ########.fr       */
+/*   Updated: 2019/09/08 22:01:20 by yruda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,25 +83,6 @@ void	exit_map(char *line, char *map)
 	\r	[x] is the position of the player", 1);
 }
 
-char	*ft_strrealloc(char *s, int numcols)
-{
-	char	*result;
-	int		i;
-	int		j;
-	int		r;
-
-	i = 0;
-	j = 0;
-	r = 0;
-	result = NULL;
-	if (!(result = ft_strnew(sizeof(char) *	(ft_strlen(s) + numcols + 2))))
-		return (NULL);
-	ft_strcpy(result, s);
-	if (s)
-		free (s);
-	return (result);
-}
-
 int		read_file(char *file, char **map, t_wolf *w)
 {
 	int		fd;
@@ -127,7 +108,7 @@ int		read_file(char *file, char **map, t_wolf *w)
 		w->ylength++;
 		free(line);
 	}
-	(w->ylength < 3) ?
+	(w->ylength < 3 || w->xwidth < 3) ?
 		exit_map(line, *map) : (1);
 	free(line);
 	return (0);

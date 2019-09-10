@@ -6,7 +6,7 @@
 /*   By: yruda <yruda@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 15:26:09 by yruda             #+#    #+#             */
-/*   Updated: 2019/08/08 15:03:26 by yruda            ###   ########.fr       */
+/*   Updated: 2019/09/06 19:49:51 by yruda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char				*ft_strsub(char const *s, unsigned int start, size_t len);
 char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strtrim(char const *s);
 char				**ft_strsplit(char const *s, char c);
-char				*ft_itoa(int n);
+void				ft_itoa(int n, char *result);
 void				ft_putchar(char c);
 void				ft_putstr(char *c);
 void				ft_putendl(char const *s);
@@ -110,7 +110,9 @@ int					ft_wordlen(char *s);
 */
 
 int					ft_maxarr(int *a, int n);
+int					ft_max(int a, int b);
 int					ft_minarr(int *a, int n);
+int					ft_min(int a, int b);
 int					ft_sqrtint(unsigned int i);
 int					ft_pow(int num, int pow);
 
