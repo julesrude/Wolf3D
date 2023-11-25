@@ -28,7 +28,7 @@ LIBX =			minilibx/libmlx.a
 LIBX_FOLDER =	minilibx/
 LIBX_FLAGS =	-L minilibx/ -lmlx -framework OpenGL -framework AppKit
 
-COMPILE =		gcc -Wall -Wextra -Werror -g
+COMPILE =		gcc -g #-Wall -Wextra -Werror 
 DELETE_PREV =	"\x1b[A\x1b[K"
 
 all: $(NAME)
@@ -38,7 +38,7 @@ $(NAME): $(LIBFT) $(OBJS_PATH) $(OBJS)
 	@echo "\n 	\x1b[36m" [ 💁 $(NAME) ] "\x1b[0m\n"
 
 $(OBJS_PATH)%.o: %.c $(HEADER) $(HEADER_KEYS)
-	@$(COMPILE) -I $(INCLUDES) -I $(INCLUDES_L) -c $< -o $@
+	@$(COMPILE) -I $(INCLUDES) -I $(INCLUDES_L) -I $(LIBX_FOLDER) -c $< -o $@
 	@echo "\x1b[36m" created: "\x1b[97;46m" $(@:objs/%=%) "\x1b[0m"
 
 $(OBJS_PATH):
